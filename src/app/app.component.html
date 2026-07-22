@@ -1,0 +1,200 @@
+<!-- MUSIC FAB -->
+<button class="music-fab" (click)="toggleMusic()">
+  <span *ngIf="!isPlaying()">🔊</span><span *ngIf="isPlaying()">🔇</span>
+</button>
+<audio #audioPlayer loop preload="auto">
+  <source src="assets/music/wedding-melody.mp3" type="audio/mpeg" />
+</audio>
+
+<!-- LIGHTBOX -->
+<div *ngIf="lightboxIndex !== null" class="lightbox" (click)="closeLightbox()">
+  <button class="btn-close-lightbox" (click)="closeLightbox()">×</button>
+  <img [src]="photos[lightboxIndex!].src" class="lightbox-img" />
+  <p class="text-white mt-3">{{ photos[lightboxIndex!].caption }}</p>
+</div>
+<!-- PETALS -->
+<span
+  *ngFor="let p of petals"
+  class="petal"
+  [style.left.%]="p.left"
+  [style.animation-delay.s]="p.delay"
+  [style.animation-duration.s]="p.duration"
+  >{{ p.emoji }}</span
+>
+
+<!-- ENVELOPE -->
+<div *ngIf="showEnvelope" class="envelope-overlay" (click)="openEnvelope()">
+  <div class="envelope">
+    <div class="flap"></div>
+    <div class="seal">J ♥️ J</div>
+    <!-- <p class="mt-5 playfair">Tap to Open</p> -->
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-md-10">
+      <mat-card
+        class="card-paper p-4 p-md-5 text-center animate__animated animate__fadeIn"
+      >
+        <!-- MANGAL MANTRA - GANESH SECTION -->
+        <div class="mantra-wrapper text-center mb-5">
+          <div class="mantra-card">
+            <div class="om-symbol">ॐ</div>
+            <div class="mb-3">
+              <span style="font-size: 32px">॥ श्री गणेशाय नमः ॥</span>
+            </div>
+            <p class="mantra-title">|| मंगल मंत्र ||</p>
+
+            <h3 class="mantra-sanskrit">
+              जयमू जयायै गणपतये नमो नमः ।<br />
+              सिद्धि बुद्धिा प्रदायिने, मंगलं कुरु मे सदा ।।
+            </h3>
+
+            <p class="mantra-translation fst-italic">
+              Salutations to Lord Ganesha, the giver of victory (Jayam) and
+              triumph (Jaya).<br />
+              Bestow upon us wisdom, prosperity and success always.
+            </p>
+
+            <mat-divider class="my-3 gold-divider"></mat-divider>
+
+            <p class="text-uppercase small tracking">
+              You are lovingly invited to celebrate our wedding with us
+            </p>
+            <h1 class="vibes display-2 my-4" style="color: var(--maroon)">
+              Jayam <span class="gold-text">&</span> Jaya
+            </h1>
+            <p class="playfair fst-italic">
+              Your presence will make this auspicious occasion truly special.
+            </p>
+          </div>
+        </div>
+
+        <mat-divider class="my-4"></mat-divider>
+
+        <!-- COUNTDOWN -->
+        <section class="countdown-section align-content-center">
+          <h5 class="playfair gold-text countdown-heading">
+            Counting down to 26th Nov 2026
+          </h5>
+
+          <div class="row g-3 my-3 justify-content-center">
+            <div
+              class="col-6 col-md-3"
+              *ngFor="let item of countdownItems; let i = index"
+            >
+              <div class="scratch-tile" [class.scratched]="scratchRevealed[i]">
+                <canvas
+                  #scratchCanvas
+                  class="scratch-overlay"
+                  (pointerdown)="startScratch(i, $event)"
+                  (pointermove)="scratch(i, $event)"
+                  (pointerup)="endScratch(i)"
+                  (pointerleave)="endScratch(i)"
+                  aria-label="Scratch reveal card"
+                ></canvas>
+
+                <div class="scratch-tile-content countdown-tile">
+                  <div class="fs-1 fw-bold playfair">{{ item.v }}</div>
+                  <div class="small text-uppercase">{{ item.l }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <mat-divider class="my-4"></mat-divider>
+
+        <!-- GALLERY -->
+        <section class="gallery py-5">
+          <h2 class="vibes text-center display-5">Our Moments</h2>
+          <p class="text-center small text-muted mb-4">
+            A glimpse of our journey
+          </p>
+
+          <!-- Mobile: horizontal scroll, Desktop: grid -->
+          <div class="d-flex d-md-none overflow-auto gap-3 pb-3 snap-scroll">
+            <div
+              *ngFor="let p of photos; let i = index"
+              class="flex-shrink-0"
+              style="width: 85vw"
+            >
+              <img
+                [src]="p.src"
+                class="w-100 rounded-4 shadow"
+                style="height: 320px; object-fit: cover"
+                (click)="openLightbox(i)"
+              />
+            </div>
+          </div>
+
+          <div class="row g-3 d-none d-md-flex">
+            <div class="col-md-4" *ngFor="let p of photos; let i = index">
+              <div class="gallery-card" (click)="openLightbox(i)">
+                <img [src]="p.src" class="w-100" />
+                <div class="overlay">
+                  <span>{{ p.caption }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <mat-divider class="my-4"></mat-divider>
+
+        <!-- FAMILY -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <h6 class="gold-text text-uppercase">Groom's Family</h6>
+            <p class="mb-0 fw-bold">{{ groomFamily.parents }}</p>
+            <small>{{ groomFamily.family }}</small>
+          </div>
+          <div class="col-md-6 mb-3">
+            <h6 class="gold-text text-uppercase">Bride's Family</h6>
+            <p class="mb-0 fw-bold">{{ brideFamily.parents }}</p>
+            <small>{{ brideFamily.family }}</small>
+          </div>
+        </div>
+
+        <!-- EVENTS -->
+        <div class="bg-light p-4 rounded my-4 text-start">
+          <h5 class="playfair text-center mb-3">Wedding Festivities</h5>
+          <div class="d-flex mb-3">
+            <div class="badge bg-warning-subtle text-dark me-3 h-50">
+              25th Nov 2026
+            </div>
+            <div>
+              <strong>Haldi</strong> - 10:00 AM<br />
+              <strong>Ring Ceremony</strong> - 4:00 PM<br />
+              <strong>Sangeet Night</strong> - 6:00 PM<br />
+            </div>
+          </div>
+          <div class="d-flex mb-3">
+            <div class="badge bg-warning-subtle text-dark me-3 h-50">
+              26th Nov 2026
+            </div>
+            <div>
+              <strong>Barat</strong> - 10:00 AM<br />
+              <strong>Wedding Ceremony</strong> - 1:00 PM<br />
+              <strong>Grand Reception</strong> - 8:30 PM
+            </div>
+          </div>
+        </div>
+
+        <!-- VENUE -->
+        <mat-card class="p-3 border border-warning">
+          <h5 class="playfair">Venue</h5>
+          <p class="fw-bold mb-1">{{ venue.name }}</p>
+          <p class="small text-muted">{{ venue.address }}</p>
+          <a mat-stroked-button color="warn" [href]="venue.map" target="_blank"
+            >Open in Maps</a
+          >
+        </mat-card>
+
+        <p class="mt-5 vibes fs-3">Awaiting your blessings</p>
+        <p class="small text-muted">With love - Jayam & Jaya</p>
+      </mat-card>
+    </div>
+  </div>
+</div>
