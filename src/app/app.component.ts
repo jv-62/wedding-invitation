@@ -89,7 +89,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     { src: 'assets/photos/5.jpg', caption: 'Haldi Smiles' },
     { src: 'assets/photos/6.jpg', caption: 'Forever Together' },
   ];
-  isPlaying = signal(true);
+  isPlaying = signal(false);
   lightboxIndex: number | null = null;
 
   @ViewChild('audioPlayer') audio!: ElementRef<HTMLAudioElement>;
@@ -148,7 +148,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     window.addEventListener('resize', this.handleScratchResize);
   }
   startCountdown() {
-    const target = new Date('2026-11-26T19:00:00+05:30').getTime();
+    const target = new Date('2026-11-26T00:00:00+05:30').getTime();
     this.timer = setInterval(() => {
       const diff = target - Date.now();
       if (diff <= 0) {

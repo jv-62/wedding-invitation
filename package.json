@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:pages": "ng build --base-href=/wedding-invitation/",
+    "deploy": "npx angular-cli-ghpages -d dist/wedding-invitation -r https://github.com/jv-62/wedding-invitation.git -b gh-pages",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
