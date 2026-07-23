@@ -1,18 +1,16 @@
-<!-- MUSIC FAB -->
 <button class="music-fab" (click)="toggleMusic()">
   <span *ngIf="!isPlaying()">🔊</span><span *ngIf="isPlaying()">🔇</span>
 </button>
-<audio #audioPlayer loop preload="auto">
+<audio #audioPlayer preload="auto" loop>
   <source src="assets/music/wedding-melody.mp3" type="audio/mpeg" />
 </audio>
 
-<!-- LIGHTBOX -->
 <div *ngIf="lightboxIndex !== null" class="lightbox" (click)="closeLightbox()">
   <button class="btn-close-lightbox" (click)="closeLightbox()">×</button>
   <img [src]="photos[lightboxIndex!].src" class="lightbox-img" />
   <p class="text-white mt-3">{{ photos[lightboxIndex!].caption }}</p>
 </div>
-<!-- PETALS -->
+
 <span
   *ngFor="let p of petals"
   class="petal"
@@ -22,12 +20,10 @@
   >{{ p.emoji }}</span
 >
 
-<!-- ENVELOPE -->
 <div *ngIf="showEnvelope" class="envelope-overlay" (click)="openEnvelope()">
   <div class="envelope">
     <div class="flap"></div>
     <div class="seal">J ♥️ J</div>
-    <!-- <p class="mt-5 playfair">Tap to Open</p> -->
   </div>
 </div>
 
@@ -37,7 +33,6 @@
       <mat-card
         class="card-paper p-4 p-md-5 text-center animate__animated animate__fadeIn"
       >
-        <!-- MANGAL MANTRA - GANESH SECTION -->
         <div class="mantra-wrapper text-center mb-5">
           <div class="mantra-card">
             <div class="om-symbol">ॐ</div>
@@ -73,7 +68,6 @@
 
         <mat-divider class="my-4"></mat-divider>
 
-        <!-- COUNTDOWN -->
         <section class="countdown-section align-content-center">
           <h5 class="playfair gold-text countdown-heading">
             Counting down to 26th Nov 2026
@@ -106,14 +100,12 @@
 
         <mat-divider class="my-4"></mat-divider>
 
-        <!-- GALLERY -->
         <section class="gallery py-5">
           <h2 class="vibes text-center display-5">Our Moments</h2>
           <p class="text-center small text-muted mb-4">
             A glimpse of our journey
           </p>
 
-          <!-- Mobile: horizontal scroll, Desktop: grid -->
           <div class="d-flex d-md-none overflow-auto gap-3 pb-3 snap-scroll">
             <div
               *ngFor="let p of photos; let i = index"
@@ -143,7 +135,6 @@
 
         <mat-divider class="my-4"></mat-divider>
 
-        <!-- FAMILY -->
         <div class="row">
           <div class="col-md-6 mb-3">
             <h6 class="gold-text text-uppercase">Groom's Family</h6>
@@ -157,7 +148,6 @@
           </div>
         </div>
 
-        <!-- EVENTS -->
         <div class="bg-light p-4 rounded my-4 text-start">
           <h5 class="playfair text-center mb-3">Wedding Festivities</h5>
           <div class="d-flex mb-3">
@@ -182,7 +172,6 @@
           </div>
         </div>
 
-        <!-- VENUE -->
         <mat-card class="p-3 border border-warning">
           <h5 class="playfair">Venue</h5>
           <p class="fw-bold mb-1">{{ venue.name }}</p>
@@ -193,7 +182,7 @@
         </mat-card>
 
         <p class="mt-5 vibes fs-3">Awaiting your blessings</p>
-        <p class="small text-muted">With love - Jayam & Jaya</p>
+        <p class="small text-muted">With love - Jaya & Jayam</p>
       </mat-card>
     </div>
   </div>
