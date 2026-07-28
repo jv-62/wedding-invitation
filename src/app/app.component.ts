@@ -22,9 +22,12 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
+  constructor() {}
   showEnvelope = true;
   scratchRevealed = [false, false, false, false];
-  celebrationMode = false;
+  get isAllCardsScratched(): boolean {
+    return this.scratchRevealed.every((revealed) => revealed);
+  }
   countdown = { days: 0, hours: 0, mins: 0, secs: 0 };
   countdownItems = [
     { l: 'Days', v: 0 },
@@ -56,6 +59,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       '🌷',
       '💐',
       '🌻',
+      '♥️',
+      '💛',
       '🌸',
       '🪷',
       '✨',
@@ -65,6 +70,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       '🌷',
       '💐',
       '🌻',
+      '♥️',
+      '💛',
     ][i % 18],
   }));
 
@@ -82,18 +89,78 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     address:
       'Devleela Parisar, Bhangarh Road, Chandra gupt mourya chouraha / M.R.10 Square, 79, Malvi Nagar, New Hira Nagar, Sukhliya, Indore, Madhya Pradesh 452010',
     map: 'https://maps.app.goo.gl/mNCuHX8D1kXkrny57',
+    image: 'assets/photos/venue.webp',
   };
 
-  photos = [
-    { src: 'assets/photos/1.jpg', caption: 'Engagement' },
-    { src: 'assets/photos/2.jpg', caption: 'Mehndi Vibes' },
-    { src: 'assets/photos/3.jpg', caption: 'Sangeet Night' },
-    { src: 'assets/photos/4.jpg', caption: 'Our Journey' },
-    { src: 'assets/photos/5.jpg', caption: 'Haldi Smiles' },
-    { src: 'assets/photos/6.jpg', caption: 'Forever Together' },
+  festivities = [
+    {
+      date: '25th Nov 2026',
+      title: 'Haldi Ceremony',
+      subtitle: 'Traditional turmeric ceremony',
+      time: '10:00 AM',
+      image: 'assets/photos/haldi.jpg',
+      details: [
+        'Colorful haldi application and family blessings',
+        'Joyful traditions with vibrant décor',
+      ],
+    },
+    {
+      date: '25th Nov 2026',
+      title: 'Ring Ceremony',
+      subtitle: 'Exchange of rings and smiles',
+      time: '4:00 PM',
+      image: 'assets/photos/ring-ceremony.jpg',
+      details: [
+        'Intimate ring exchange with close family',
+        'Music, dance, and joyful celebration',
+      ],
+    },
+    {
+      date: '25th Nov 2026',
+      title: 'Sangeet Night',
+      subtitle: 'An evening of song and dance',
+      time: '6:00 PM',
+      image: 'assets/photos/sangeet-night.webp',
+      details: [
+        'Lively performances and family dance moments',
+        'Celebration of love with music and laughter',
+      ],
+    },
+    {
+      date: '26th Nov 2026',
+      title: 'Barat',
+      subtitle: 'The groom procession arrival',
+      time: '10:00 AM',
+      image: 'assets/photos/barat.png',
+      details: [
+        'Festive procession to the wedding venue',
+        'Traditional welcome by both families',
+      ],
+    },
+    {
+      date: '26th Nov 2026',
+      title: 'Wedding Ceremony',
+      subtitle: 'Sacred vows and traditions',
+      time: '1:00 PM',
+      image: 'assets/photos/phere.png',
+      details: [
+        'Blessings and rituals at Shree Devleela Garden',
+        'Heartfelt vows shared with loved ones',
+      ],
+    },
+    {
+      date: '26th Nov 2026',
+      title: 'Grand Reception',
+      subtitle: 'A night of dinner and dance',
+      time: '7:00 PM',
+      image: 'assets/photos/grand-reception.png',
+      details: [
+        'Elegant celebration with gourmet dining',
+        'Music, dancing, and joyful festivities',
+      ],
+    },
   ];
   isPlaying = signal(false);
-  lightboxIndex: number | null = null;
 
   @ViewChild('audioPlayer') audio!: ElementRef<HTMLAudioElement>;
   @ViewChildren('scratchCanvas') scratchCanvases!: QueryList<
@@ -147,12 +214,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     localStorage.setItem(this.musicPreferenceKey, 'true');
   }
 
-  openLightbox(i: number) {
-    this.lightboxIndex = i;
-  }
-  closeLightbox() {
-    this.lightboxIndex = null;
-  }
   ngOnInit() {
     this.startCountdown();
     this.isPlaying.set(false);
@@ -197,6 +258,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.handleFirstUserInteraction,
     );
   }
+
   private handleScratchResize = () => {
     requestAnimationFrame(() => this.setupScratchCards());
   };

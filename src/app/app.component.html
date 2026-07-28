@@ -5,12 +5,6 @@
   <source src="assets/music/wedding-melody.mp3" type="audio/mpeg" />
 </audio>
 
-<div *ngIf="lightboxIndex !== null" class="lightbox" (click)="closeLightbox()">
-  <button class="btn-close-lightbox" (click)="closeLightbox()">×</button>
-  <img [src]="photos[lightboxIndex!].src" class="lightbox-img" />
-  <p class="text-white mt-3">{{ photos[lightboxIndex!].caption }}</p>
-</div>
-
 <span
   *ngFor="let p of petals"
   class="petal"
@@ -58,7 +52,7 @@
               You are lovingly invited to celebrate our wedding with us
             </p>
             <h1 class="vibes display-2 my-4" style="color: var(--maroon)">
-              Jaya <span class="gold-text">&</span> Jayam
+              Jayam <span class="gold-text">&</span> Jaya
             </h1>
             <p class="playfair fst-italic">
               Your presence will make this auspicious occasion truly special.
@@ -69,9 +63,22 @@
         <mat-divider class="my-4"></mat-divider>
 
         <section class="countdown-section align-content-center">
+          <p class="text-uppercase small tracking">
+            A lifetime of togetherness begins with one sacred step
+          </p>
           <h5 class="playfair gold-text countdown-heading">
-            Counting down to 26th Nov 2026
+            The wedding countdown is on!
           </h5>
+
+          <h2
+            *ngIf="isAllCardsScratched"
+            class="gold-text display-5 my-3 animate__animated animate__fadeInDown"
+          >
+            Thursday, 26 · 11 · 2026
+          </h2>
+          <p *ngIf="!isAllCardsScratched" class="gold-text small mt-3 mb-3">
+            Scratch all the cards to reveal the special date.
+          </p>
 
           <div class="row g-3 my-3 justify-content-center">
             <div
@@ -100,89 +107,119 @@
 
         <mat-divider class="my-4"></mat-divider>
 
-        <section class="gallery py-5">
-          <h2 class="vibes text-center display-5">Our Moments</h2>
-          <p class="text-center small text-muted mb-4">
-            A glimpse of our journey
-          </p>
-
-          <div class="d-flex d-md-none overflow-auto gap-3 pb-3 snap-scroll">
-            <div
-              *ngFor="let p of photos; let i = index"
-              class="flex-shrink-0"
-              style="width: 85vw"
-            >
-              <img
-                [src]="p.src"
-                class="w-100 rounded-4 shadow"
-                style="height: 320px; object-fit: cover"
-                (click)="openLightbox(i)"
-              />
-            </div>
-          </div>
-
-          <div class="row g-3 d-none d-md-flex">
-            <div class="col-md-4" *ngFor="let p of photos; let i = index">
-              <div class="gallery-card" (click)="openLightbox(i)">
-                <img [src]="p.src" class="w-100" />
-                <div class="overlay">
-                  <span>{{ p.caption }}</span>
+        <div class="row g-4 family-card-row">
+          <div class="col-12 col-md-6">
+            <mat-card class="family-card p-3 h-100 shadow-sm">
+              <div class="family-card-header mb-3">
+                <div class="family-card-icon groom">G</div>
+                <div class="text-start">
+                  <h6 class="gold-text text-uppercase mb-1">Groom's Family</h6>
+                  <small class="text-muted">Welcoming family traditions</small>
+                  <br />
+                  <small class="text-muted"
+                    >We request the pleasure of your company</small
+                  >
                 </div>
               </div>
+              <p class="mb-2 fw-bold">{{ groomFamily.parents }}</p>
+              <small class="text-muted">{{ groomFamily.family }}</small>
+            </mat-card>
+          </div>
+          <div class="col-12 col-md-6">
+            <mat-card class="family-card p-3 h-100 shadow-sm">
+              <div class="family-card-header mb-3">
+                <div class="family-card-icon bride">B</div>
+                <div class="text-start">
+                  <h6 class="gold-text text-uppercase mb-1">Bride's Family</h6>
+                  <small class="text-muted">Cherished family blessings</small>
+                  <br />
+                  <small class="text-muted"
+                    >We are blessed with this sacred union</small
+                  >
+                </div>
+              </div>
+              <p class="mb-2 fw-bold">{{ brideFamily.parents }}</p>
+              <small class="text-muted">{{ brideFamily.family }}</small>
+            </mat-card>
+          </div>
+        </div>
+
+        <mat-divider class="my-4"></mat-divider>
+
+        <section class="festivities py-5">
+          <h2 class="vibes text-center display-5">Wedding Festivities</h2>
+          <p class="text-center small text-muted mb-4">
+            Celebrate three highlight programs with photo details and timings.
+          </p>
+
+          <div class="row g-4">
+            <div
+              class="col-12 col-md-6 col-lg-4"
+              *ngFor="let event of festivities"
+            >
+              <mat-card class="festivity-card h-100 shadow-sm">
+                <div class="festivity-img-wrapper">
+                  <img
+                    [src]="event.image"
+                    [alt]="event.title"
+                    class="festivity-img w-100"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="p-3">
+                  <div class="small text-muted mb-2">
+                    {{ event.date }}
+                  </div>
+                  <h5 class="mb-2">{{ event.title }}</h5>
+                  <div class="festivity-time mb-3">
+                    <strong>{{ event.time }}</strong>
+                  </div>
+                  <p class="small text-muted mb-3">{{ event.subtitle }}</p>
+                  <ul class="festivity-details list-unstyled mb-0">
+                    <li *ngFor="let detail of event.details">
+                      <span class="bullet">•</span>{{ detail }}
+                    </li>
+                  </ul>
+                </div>
+              </mat-card>
             </div>
           </div>
         </section>
 
-        <mat-divider class="my-4"></mat-divider>
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <h6 class="gold-text text-uppercase">Groom's Family</h6>
-            <p class="mb-0 fw-bold">{{ groomFamily.parents }}</p>
-            <small>{{ groomFamily.family }}</small>
-          </div>
-          <div class="col-md-6 mb-3">
-            <h6 class="gold-text text-uppercase">Bride's Family</h6>
-            <p class="mb-0 fw-bold">{{ brideFamily.parents }}</p>
-            <small>{{ brideFamily.family }}</small>
-          </div>
-        </div>
-
-        <div class="bg-light p-4 rounded my-4 text-start">
-          <h5 class="playfair text-center mb-3">Wedding Festivities</h5>
-          <div class="d-flex mb-3">
-            <div class="badge bg-warning-subtle text-dark me-3 h-50">
-              25th Nov 2026
+        <mat-card class="venue-card overflow-hidden shadow-sm mb-4">
+          <div class="row g-0 align-items-stretch">
+            <div class="col-12 col-lg-6">
+              <div class="venue-map">
+                <img
+                  class="venue-map-frame"
+                  [src]="venue.image"
+                  alt="Venue image"
+                  loading="lazy"
+                  title="Shree Devleela Garden map"
+                />
+              </div>
             </div>
-            <div>
-              <strong>Haldi</strong> - 10:00 AM<br />
-              <strong>Ring Ceremony</strong> - 4:00 PM<br />
-              <strong>Sangeet Night</strong> - 6:00 PM<br />
-            </div>
-          </div>
-          <div class="d-flex mb-3">
-            <div class="badge bg-warning-subtle text-dark me-3 h-50">
-              26th Nov 2026
-            </div>
-            <div>
-              <strong>Barat</strong> - 10:00 AM<br />
-              <strong>Wedding Ceremony</strong> - 1:00 PM<br />
-              <strong>Grand Reception</strong> - 8:30 PM
+            <div class="col-12 col-lg-6">
+              <div
+                class="venue-card-content p-4 h-100 d-flex flex-column justify-content-center align-items-center"
+              >
+                <h5 class="playfair mb-3">Venue</h5>
+                <p class="fw-bold mb-2">{{ venue.name }}</p>
+                <p class="small text-muted mb-4">{{ venue.address }}</p>
+                <a
+                  mat-stroked-button
+                  color="warn"
+                  [href]="venue.map"
+                  target="_blank"
+                  >Open in Maps</a
+                >
+              </div>
             </div>
           </div>
-        </div>
-
-        <mat-card class="p-3 border border-warning">
-          <h5 class="playfair">Venue</h5>
-          <p class="fw-bold mb-1">{{ venue.name }}</p>
-          <p class="small text-muted">{{ venue.address }}</p>
-          <a mat-stroked-button color="warn" [href]="venue.map" target="_blank"
-            >Open in Maps</a
-          >
         </mat-card>
 
         <p class="mt-5 vibes fs-3">Awaiting your blessings</p>
-        <p class="small text-muted">With love - Jaya & Jayam</p>
+        <p class="small text-muted">With love - Jayam & Jaya</p>
       </mat-card>
     </div>
   </div>
