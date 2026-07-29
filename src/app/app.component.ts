@@ -53,6 +53,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       '🌸',
       '🪷',
       '✨',
+      '🎉',
       '🌼',
       '🌺',
       '🌹',
@@ -64,6 +65,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       '🌸',
       '🪷',
       '✨',
+      '🎉',
       '🌼',
       '🌺',
       '🌹',
@@ -109,7 +111,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       title: 'Ring Ceremony',
       subtitle: 'Exchange of rings and smiles',
       time: '4:00 PM',
-      image: 'assets/photos/ring-ceremony.jpg',
+      image: 'assets/photos/ring-ceremony.png',
       details: [
         'Intimate ring exchange with close family',
         'Music, dance, and joyful celebration',
@@ -120,7 +122,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       title: 'Sangeet Night',
       subtitle: 'An evening of song and dance',
       time: '6:00 PM',
-      image: 'assets/photos/sangeet-night.webp',
+      image: 'assets/photos/sangeet-night.png',
       details: [
         'Lively performances and family dance moments',
         'Celebration of love with music and laughter',

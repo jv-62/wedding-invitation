@@ -192,30 +192,90 @@
   color: #5c1a1a;
 }
 
-.lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  .lightbox-img {
-    max-width: 90vw;
-    max-height: 80vh;
-    border-radius: 12px;
-    object-fit: contain;
+.animate-fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.7s ease forwards;
+}
+
+.animate-zoom-in {
+  opacity: 0;
+  transform: scale(0.96);
+  animation: zoomIn 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  .btn-close-lightbox {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 40px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scratch-tile {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  min-height: 210px;
+  background: linear-gradient(135deg, rgba(255, 248, 234, 0.98), #fffef7);
+  border: 1px solid rgba(181, 147, 98, 0.18);
+  box-shadow: 0 16px 35px rgba(92, 26, 26, 0.05);
+}
+
+.scratch-overlay {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+}
+
+.scratch-tile-content {
+  position: relative;
+  z-index: 1;
+  min-height: 210px;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem 0;
+}
+
+.scratch-tile.scratched {
+  animation: revealCard 0.5s ease forwards;
+}
+
+@keyframes revealCard {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.01);
+  }
+}
+
+.venue-card-content {
+  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), #fffef7);
+  text-align: left;
+}
+
+.venue-card-content a {
+  width: fit-content;
+}
+
+@media (max-width: 992px) {
+  .venue-card-content {
+    align-items: flex-start;
   }
 }
 
@@ -226,7 +286,6 @@
   scroll-snap-align: center;
 }
 
-// Responsive fixes
 .card-paper {
   @media (max-width: 576px) {
     padding: 20px !important;

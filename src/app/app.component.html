@@ -24,9 +24,7 @@
 <div class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-10 col-md-10">
-      <mat-card
-        class="card-paper p-4 p-md-5 text-center animate__animated animate__fadeIn"
-      >
+      <mat-card class="card-paper p-4 p-md-5 text-center animate-zoom-in">
         <div class="mantra-wrapper text-center mb-5">
           <div class="mantra-card">
             <div class="om-symbol">ॐ</div>
@@ -36,7 +34,7 @@
             <p class="mantra-title">|| मंगल मंत्र ||</p>
 
             <h3 class="mantra-sanskrit">
-              जयमू जयायै गणपतये नमो नमः ।<br />
+              जयम् जयायै गणपतये नमो नमः ।<br />
               सिद्धि बुद्धिा प्रदायिने, मंगलं कुरु मे सदा ।।
             </h3>
 
@@ -72,7 +70,7 @@
 
           <h2
             *ngIf="isAllCardsScratched"
-            class="gold-text display-5 my-3 animate__animated animate__fadeInDown"
+            class="gold-text display-5 my-3 animate-fade-up"
           >
             Thursday, 26 · 11 · 2026
           </h2>
@@ -149,7 +147,7 @@
         <section class="festivities py-5">
           <h2 class="vibes text-center display-5">Wedding Festivities</h2>
           <p class="text-center small text-muted mb-4">
-            Celebrate three highlight programs with photo details and timings.
+            Celebrate all highlighted programs with photo details and timings.
           </p>
 
           <div class="row g-4">
@@ -157,7 +155,7 @@
               class="col-12 col-md-6 col-lg-4"
               *ngFor="let event of festivities"
             >
-              <mat-card class="festivity-card h-100 shadow-sm">
+              <mat-card class="festivity-card h-100 shadow-sm animate-fade-up">
                 <div class="festivity-img-wrapper">
                   <img
                     [src]="event.image"
@@ -186,7 +184,9 @@
           </div>
         </section>
 
-        <mat-card class="venue-card overflow-hidden shadow-sm mb-4">
+        <mat-card
+          class="venue-card overflow-hidden shadow-sm mb-4 animate-zoom-in"
+        >
           <div class="row g-0 align-items-stretch">
             <div class="col-12 col-lg-6">
               <div class="venue-map">
@@ -195,7 +195,7 @@
                   [src]="venue.image"
                   alt="Venue image"
                   loading="lazy"
-                  title="Shree Devleela Garden map"
+                  title="Shree Devleela Garden, Indore"
                 />
               </div>
             </div>
