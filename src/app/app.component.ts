@@ -24,6 +24,60 @@ import { MatDividerModule } from '@angular/material/divider';
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor() {}
   showEnvelope = true;
+  copy = {
+    envelopeSeal: 'J ♥️ J',
+    mantra: {
+      symbol: 'ॐ',
+      title: '|| मंगल मंत्र ||',
+      lines: [
+        'जयमू जयायै गणपतये नमो नमः ।',
+        'सिद्धि बुद्धिा प्रदायिने, मंगलं कुरु मे सदा ।।',
+      ],
+      translation: [
+        'Salutations to Lord Ganesha, the giver of victory (Jayam) and triumph (Jaya).',
+        'Bestow upon us wisdom, prosperity and success always.',
+      ],
+    },
+    invitation: {
+      teaser: 'You are lovingly invited to celebrate our wedding with us',
+      couple: 'Jayam & Jaya',
+      note: 'Your presence will make this auspicious occasion truly special.',
+    },
+    countdown: {
+      pre: 'A lifetime of togetherness begins with one sacred step',
+      title: 'The wedding countdown is on!',
+      revealDate: 'Thursday, 26 · 11 · 2026',
+      prompt: 'Scratch all the cards to reveal the special date.',
+      ariaLabel: 'Scratch reveal card',
+    },
+    families: {
+      groom: {
+        heading: "Groom's Family",
+        subtitle: 'Welcoming family traditions',
+        message: 'We request the pleasure of your company',
+      },
+      bride: {
+        heading: "Bride's Family",
+        subtitle: 'Cherished family blessings',
+        message: 'We are blessed with this sacred union',
+      },
+    },
+    festivities: {
+      heading: 'Wedding Festivities',
+      description:
+        'Celebrate all highlighted programs with photo details and timings.',
+    },
+    venueSection: {
+      heading: 'Venue',
+      button: 'Open in Maps',
+      mapAlt: 'Shree Devleela Garden map',
+    },
+    closing: {
+      blessing: 'Awaiting your blessings',
+      signoff: 'With love - Jayam & Jaya',
+    },
+  };
+
   scratchRevealed = [false, false, false, false];
   get isAllCardsScratched(): boolean {
     return this.scratchRevealed.every((revealed) => revealed);
@@ -232,7 +286,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   startCountdown() {
-    const target = new Date('2026-11-26T00:00:00+05:30').getTime();
+    const target = new Date('2026-11-26T14:00:00+05:30').getTime();
     this.timer = setInterval(() => {
       const diff = target - Date.now();
       if (diff <= 0) {

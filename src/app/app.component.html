@@ -17,7 +17,7 @@
 <div *ngIf="showEnvelope" class="envelope-overlay" (click)="openEnvelope()">
   <div class="envelope">
     <div class="flap"></div>
-    <div class="seal">J ♥️ J</div>
+    <div class="seal">{{ copy.envelopeSeal }}</div>
   </div>
 </div>
 
@@ -27,33 +27,37 @@
       <mat-card class="card-paper p-4 p-md-5 text-center animate-zoom-in">
         <div class="mantra-wrapper text-center mb-5">
           <div class="mantra-card">
-            <div class="om-symbol">ॐ</div>
+            <div class="om-symbol">{{ copy.mantra.symbol }}</div>
             <div class="mb-3">
               <span style="font-size: 32px">॥ श्री गणेशाय नमः ॥</span>
             </div>
-            <p class="mantra-title">|| मंगल मंत्र ||</p>
+            <p class="mantra-title">{{ copy.mantra.title }}</p>
 
             <h3 class="mantra-sanskrit">
-              जयम् जयायै गणपतये नमो नमः ।<br />
-              सिद्धि बुद्धिा प्रदायिने, मंगलं कुरु मे सदा ।।
+              <span *ngFor="let line of copy.mantra.lines; let last = last">
+                {{ line }}<br *ngIf="!last" />
+              </span>
             </h3>
 
-            <p class="mantra-translation fst-italic">
-              Salutations to Lord Ganesha, the giver of victory (Jayam) and
-              triumph (Jaya).<br />
-              Bestow upon us wisdom, prosperity and success always.
+            <p
+              class="mantra-translation fst-italic"
+              *ngFor="let line of copy.mantra.translation; let last = last"
+            >
+              {{ line }}<br *ngIf="!last" />
             </p>
 
             <mat-divider class="my-3 gold-divider"></mat-divider>
 
             <p class="text-uppercase small tracking">
-              You are lovingly invited to celebrate our wedding with us
+              {{ copy.invitation.teaser }}
             </p>
             <h1 class="vibes display-2 my-4" style="color: var(--maroon)">
-              Jayam <span class="gold-text">&</span> Jaya
+              {{ copy.invitation.couple.split(" & ")[0] }}
+              <span class="gold-text">&</span>
+              {{ copy.invitation.couple.split(" & ")[1] }}
             </h1>
             <p class="playfair fst-italic">
-              Your presence will make this auspicious occasion truly special.
+              {{ copy.invitation.note }}
             </p>
           </div>
         </div>
@@ -62,20 +66,20 @@
 
         <section class="countdown-section align-content-center">
           <p class="text-uppercase small tracking">
-            A lifetime of togetherness begins with one sacred step
+            {{ copy.countdown.pre }}
           </p>
           <h5 class="playfair gold-text countdown-heading">
-            The wedding countdown is on!
+            {{ copy.countdown.title }}
           </h5>
 
           <h2
             *ngIf="isAllCardsScratched"
             class="gold-text display-5 my-3 animate-fade-up"
           >
-            Thursday, 26 · 11 · 2026
+            {{ copy.countdown.revealDate }}
           </h2>
           <p *ngIf="!isAllCardsScratched" class="gold-text small mt-3 mb-3">
-            Scratch all the cards to reveal the special date.
+            {{ copy.countdown.prompt }}
           </p>
 
           <div class="row g-3 my-3 justify-content-center">
@@ -91,7 +95,7 @@
                   (pointermove)="scratch(i, $event)"
                   (pointerup)="endScratch(i)"
                   (pointerleave)="endScratch(i)"
-                  aria-label="Scratch reveal card"
+                  [attr.aria-label]="copy.countdown.ariaLabel"
                 ></canvas>
 
                 <div class="scratch-tile-content countdown-tile">
@@ -111,12 +115,16 @@
               <div class="family-card-header mb-3">
                 <div class="family-card-icon groom">G</div>
                 <div class="text-start">
-                  <h6 class="gold-text text-uppercase mb-1">Groom's Family</h6>
-                  <small class="text-muted">Welcoming family traditions</small>
+                  <h6 class="gold-text text-uppercase mb-1">
+                    {{ copy.families.groom.heading }}
+                  </h6>
+                  <small class="text-muted">{{
+                    copy.families.groom.subtitle
+                  }}</small>
                   <br />
-                  <small class="text-muted"
-                    >We request the pleasure of your company</small
-                  >
+                  <small class="text-muted">{{
+                    copy.families.groom.message
+                  }}</small>
                 </div>
               </div>
               <p class="mb-2 fw-bold">{{ groomFamily.parents }}</p>
@@ -128,12 +136,16 @@
               <div class="family-card-header mb-3">
                 <div class="family-card-icon bride">B</div>
                 <div class="text-start">
-                  <h6 class="gold-text text-uppercase mb-1">Bride's Family</h6>
-                  <small class="text-muted">Cherished family blessings</small>
+                  <h6 class="gold-text text-uppercase mb-1">
+                    {{ copy.families.bride.heading }}
+                  </h6>
+                  <small class="text-muted">{{
+                    copy.families.bride.subtitle
+                  }}</small>
                   <br />
-                  <small class="text-muted"
-                    >We are blessed with this sacred union</small
-                  >
+                  <small class="text-muted">{{
+                    copy.families.bride.message
+                  }}</small>
                 </div>
               </div>
               <p class="mb-2 fw-bold">{{ brideFamily.parents }}</p>
@@ -145,9 +157,11 @@
         <mat-divider class="my-4"></mat-divider>
 
         <section class="festivities py-5">
-          <h2 class="vibes text-center display-5">Wedding Festivities</h2>
+          <h2 class="vibes text-center display-5">
+            {{ copy.festivities.heading }}
+          </h2>
           <p class="text-center small text-muted mb-4">
-            Celebrate all highlighted programs with photo details and timings.
+            {{ copy.festivities.description }}
           </p>
 
           <div class="row g-4">
@@ -193,9 +207,9 @@
                 <img
                   class="venue-map-frame"
                   [src]="venue.image"
-                  alt="Venue image"
+                  [alt]="copy.venueSection.mapAlt"
                   loading="lazy"
-                  title="Shree Devleela Garden, Indore"
+                  [title]="copy.venueSection.mapAlt"
                 />
               </div>
             </div>
@@ -203,7 +217,7 @@
               <div
                 class="venue-card-content p-4 h-100 d-flex flex-column justify-content-center align-items-center"
               >
-                <h5 class="playfair mb-3">Venue</h5>
+                <h5 class="playfair mb-3">{{ copy.venueSection.heading }}</h5>
                 <p class="fw-bold mb-2">{{ venue.name }}</p>
                 <p class="small text-muted mb-4">{{ venue.address }}</p>
                 <a
@@ -211,15 +225,15 @@
                   color="warn"
                   [href]="venue.map"
                   target="_blank"
-                  >Open in Maps</a
+                  >{{ copy.venueSection.button }}</a
                 >
               </div>
             </div>
           </div>
         </mat-card>
 
-        <p class="mt-5 vibes fs-3">Awaiting your blessings</p>
-        <p class="small text-muted">With love - Jayam & Jaya</p>
+        <p class="mt-5 vibes fs-3">{{ copy.closing.blessing }}</p>
+        <p class="small text-muted">{{ copy.closing.signoff }}</p>
       </mat-card>
     </div>
   </div>
