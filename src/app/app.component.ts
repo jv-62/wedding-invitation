@@ -22,7 +22,19 @@ import { MatDividerModule } from '@angular/material/divider';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
-  constructor() {}
+  @ViewChild('audioPlayer') audio!: ElementRef<HTMLAudioElement>;
+  @ViewChildren('scratchCanvas') scratchCanvases!: QueryList<
+    ElementRef<HTMLCanvasElement>
+  >;
+  private timer: any;
+  private scratchContexts: Array<CanvasRenderingContext2D | null> = [
+    null,
+    null,
+    null,
+    null,
+  ];
+  private scratchPointerStates = new Map<number, boolean>();
+
   showEnvelope = true;
   copy = {
     envelopeSeal: 'J ♥️ J',
@@ -77,11 +89,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       signoff: 'With love - Jayam & Jaya',
     },
   };
-
   scratchRevealed = [false, false, false, false];
-  get isAllCardsScratched(): boolean {
-    return this.scratchRevealed.every((revealed) => revealed);
-  }
   countdown = { days: 0, hours: 0, mins: 0, secs: 0 };
   countdownItems = [
     { l: 'Days', v: 0 },
@@ -89,16 +97,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     { l: 'Mins', v: 0 },
     { l: 'Secs', v: 0 },
   ];
-  private readonly musicPreferenceKey = 'wedding-music-paused';
-  private hasInteractedOnce = false;
-  private timer: any;
-  private scratchContexts: Array<CanvasRenderingContext2D | null> = [
-    null,
-    null,
-    null,
-    null,
-  ];
-  private scratchPointerStates = new Map<number, boolean>();
   petals = Array.from({ length: 15 }, (_, i) => ({
     left: Math.random() * 100,
     delay: Math.random() * 10,
@@ -130,7 +128,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       '💛',
     ][i % 18],
   }));
-
   brideFamily = {
     parents: 'D/O Late Shree Shankarlal Pareta & Smt. Jyoti Pareta',
     family: 'Pareta Family',
@@ -139,7 +136,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     parents: 'S/O Shree Dinesh Verma & Smt. Shalini Verma',
     family: 'Verma Family',
   };
-
   venue = {
     name: 'Shree Devleela Garden',
     address:
@@ -147,7 +143,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     map: 'https://maps.app.goo.gl/mNCuHX8D1kXkrny57',
     image: 'assets/photos/venue.webp',
   };
-
   festivities = [
     {
       date: '25th Nov 2026',
@@ -218,13 +213,24 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
   isPlaying = signal(false);
 
-  @ViewChild('audioPlayer') audio!: ElementRef<HTMLAudioElement>;
-  @ViewChildren('scratchCanvas') scratchCanvases!: QueryList<
-    ElementRef<HTMLCanvasElement>
-  >;
+  constructor() {}
+
+  get isAllCardsScratched(): boolean {
+    return this.scratchRevealed.every((revealed) => revealed);
+  }
+
+  ngOnInit() {
+    this.startCountdown();
+    setTimeout(() => {
+      this.closeEnvelope();
+    }, 3500);
+  }
+  ngAfterViewInit() {
+    requestAnimationFrame(() => this.setupScratchCards());
+    window.addEventListener('resize', this.handleScratchResize);
+  }
 
   toggleMusic() {
-    this.hasInteractedOnce = true;
     if (this.isPlaying()) {
       this.pauseMusic();
     } else {
@@ -238,25 +244,31 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    const playAttempt = audio.play();
-    if (!playAttempt) {
-      return;
-    }
-    audio.currentTime = 0;
+    audio.muted = false;
+    audio.autoplay = true;
+    audio.load();
 
-    playAttempt
-      .then(() => {
+    const startPlayback = (retryCount = 0) => {
+      const playAttempt = audio.play();
+      if (!playAttempt) {
         this.isPlaying.set(true);
-        localStorage.setItem(this.musicPreferenceKey, 'false');
-      })
-      .catch((error: DOMException) => {
-        if (error?.name === 'NotAllowedError') {
-          this.isPlaying.set(false);
-          return;
-        }
+        return;
+      }
 
-        this.isPlaying.set(false);
-      });
+      playAttempt
+        .then(() => {
+          this.isPlaying.set(true);
+        })
+        .catch((error: DOMException) => {
+          this.isPlaying.set(false);
+          if (error?.name === 'NotAllowedError' && retryCount < 1) {
+            setTimeout(() => startPlayback(retryCount + 2), 800);
+            return;
+          }
+        });
+    };
+
+    startPlayback();
   }
 
   private pauseMusic() {
@@ -267,26 +279,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     audio.pause();
     this.isPlaying.set(false);
-    localStorage.setItem(this.musicPreferenceKey, 'true');
   }
 
-  ngOnInit() {
-    this.startCountdown();
-    this.isPlaying.set(false);
-
-    setTimeout(() => {
-      this.closeEnvelope();
-    }, 3500);
-  }
-  ngAfterViewInit() {
-    requestAnimationFrame(() => this.setupScratchCards());
-    window.addEventListener('resize', this.handleScratchResize);
-    document.addEventListener('pointerdown', this.handleFirstUserInteraction, {
-      once: true,
-    });
-  }
   startCountdown() {
-    const target = new Date('2026-11-26T14:00:00+05:30').getTime();
+    const target = new Date('2026-11-26T13:00:00+05:30').getTime();
     this.timer = setInterval(() => {
       const diff = target - Date.now();
       if (diff <= 0) {
@@ -305,32 +301,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       this.countdownItems[3].v = this.countdown.secs;
     }, 1000);
   }
-  ngOnDestroy() {
-    this.isPlaying.set(false);
-    clearInterval(this.timer);
-    window.removeEventListener('resize', this.handleScratchResize);
-    document.removeEventListener(
-      'pointerdown',
-      this.handleFirstUserInteraction,
-    );
-  }
 
   private handleScratchResize = () => {
     requestAnimationFrame(() => this.setupScratchCards());
-  };
-
-  private handleFirstUserInteraction = () => {
-    if (
-      this.hasInteractedOnce ||
-      localStorage.getItem(this.musicPreferenceKey) === 'true'
-    ) {
-      return;
-    }
-
-    this.hasInteractedOnce = true;
-    if (!this.showEnvelope) {
-      this.playMusic();
-    }
   };
   private setupScratchCards() {
     const canvases = this.scratchCanvases?.toArray() ?? [];
@@ -438,5 +411,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   openEnvelope() {
     this.closeEnvelope();
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);
+    window.removeEventListener('resize', this.handleScratchResize);
   }
 }
