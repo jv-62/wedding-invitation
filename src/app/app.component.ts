@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       symbol: 'ॐ',
       title: '|| मंगल मंत्र ||',
       lines: [
-        'जयमू जयायै गणपतये नमो नमः ।',
+        'जयम् जयायै गणपतये नमो नमः ।',
         'सिद्धि बुद्धिा प्रदायिने, मंगलं कुरु मे सदा ।।',
       ],
       translation: [
