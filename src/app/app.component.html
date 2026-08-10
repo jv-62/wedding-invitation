@@ -1,9 +1,7 @@
-<button class="music-fab" (click)="toggleMusic()">
-  <span *ngIf="!isPlaying()">🔊</span><span *ngIf="isPlaying()">🔇</span>
-</button>
-<audio #audioPlayer preload="auto" loop>
-  <source src="assets/music/wedding-melody.mp3" type="audio/mpeg" />
-</audio>
+<app-audio-player
+  [enabled]="isPlaying()"
+  (enabledChange)="isPlaying.set($event)"
+></app-audio-player>
 
 <span
   *ngFor="let p of petals"

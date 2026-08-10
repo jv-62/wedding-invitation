@@ -7,22 +7,27 @@ import {
   OnInit,
   QueryList,
   signal,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { AudioPlayerComponent } from './audio-player/audio-player.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatDividerModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatDividerModule,
+    AudioPlayerComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('audioPlayer') audio!: ElementRef<HTMLAudioElement>;
   @ViewChildren('scratchCanvas') scratchCanvases!: QueryList<
     ElementRef<HTMLCanvasElement>
   >;
@@ -230,57 +235,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     window.addEventListener('resize', this.handleScratchResize);
   }
 
-  toggleMusic() {
-    if (this.isPlaying()) {
-      this.pauseMusic();
-    } else {
-      this.playMusic();
-    }
-  }
-
-  private playMusic() {
-    const audio = this.audio?.nativeElement;
-    if (!audio) {
-      return;
-    }
-
-    audio.muted = false;
-    audio.autoplay = true;
-    audio.load();
-
-    const startPlayback = (retryCount = 0) => {
-      const playAttempt = audio.play();
-      if (!playAttempt) {
-        this.isPlaying.set(true);
-        return;
-      }
-
-      playAttempt
-        .then(() => {
-          this.isPlaying.set(true);
-        })
-        .catch((error: DOMException) => {
-          this.isPlaying.set(false);
-          if (error?.name === 'NotAllowedError' && retryCount < 1) {
-            setTimeout(() => startPlayback(retryCount + 2), 800);
-            return;
-          }
-        });
-    };
-
-    startPlayback();
-  }
-
-  private pauseMusic() {
-    const audio = this.audio?.nativeElement;
-    if (!audio) {
-      return;
-    }
-
-    audio.pause();
-    this.isPlaying.set(false);
-  }
-
   startCountdown() {
     const target = new Date('2026-11-26T13:00:00+05:30').getTime();
     this.timer = setInterval(() => {
@@ -407,7 +361,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   closeEnvelope() {
     this.showEnvelope = false;
-    this.playMusic();
+    this.isPlaying.set(true);
   }
   openEnvelope() {
     this.closeEnvelope();

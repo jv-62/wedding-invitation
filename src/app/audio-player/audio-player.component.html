@@ -1,0 +1,8 @@
+<button class="music-fab" type="button" (click)="toggle()">
+  <span *ngIf="!enabled">🔊</span>
+  <span *ngIf="enabled">🔇</span>
+</button>
+
+<audio #audioPlayer preload="auto" loop>
+  <source src="assets/music/wedding-melody.mp3" type="audio/mpeg" />
+</audio>
