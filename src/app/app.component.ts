@@ -71,18 +71,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       groom: {
         heading: "Groom's Family",
         subtitle: 'Welcoming family traditions',
-        message: 'We request the pleasure of your company',
+        message: 'We request the pleasure of your presence and blessings',
       },
       bride: {
         heading: "Bride's Family",
-        subtitle: 'Cherished family blessings',
-        message: 'We are blessed with this sacred union',
+        subtitle: `Cherishing family's blessings`,
+        message: 'Eager to celebrate this joyous occasion with your presence',
       },
     },
     festivities: {
       heading: 'Wedding Festivities',
-      description:
-        'Celebrate all highlighted programs with photo details and timings.',
     },
     venueSection: {
       heading: 'Venue',
@@ -152,68 +150,51 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     {
       date: '25th Nov 2026',
       title: 'Haldi Ceremony',
-      subtitle: 'Traditional turmeric ceremony',
+      hashtag: '#HaldiRangJayaJayamSang',
       time: '10:00 AM',
       image: 'assets/photos/haldi.jpg',
-      details: [
-        'Colorful haldi application and family blessings',
-        'Joyful traditions with vibrant décor',
-      ],
+      details: 'Colorful haldi ceremony with family blessings',
     },
     {
       date: '25th Nov 2026',
       title: 'Ring Ceremony',
-      subtitle: 'Exchange of rings and smiles',
+      hashtag: '#JayaJayamAbOfficial',
       time: '4:00 PM',
       image: 'assets/photos/ring-ceremony.png',
-      details: [
-        'Intimate ring exchange with close family',
-        'Music, dance, and joyful celebration',
-      ],
+      details: 'Exchange of rings and smiles intimate family',
     },
     {
       date: '25th Nov 2026',
       title: 'Sangeet Night',
-      subtitle: 'An evening of song and dance',
+      hashtag: '#SwingWithJayam&Jaya',
       time: '6:00 PM',
       image: 'assets/photos/sangeet-night.png',
-      details: [
-        'Lively performances and family dance moments',
-        'Celebration of love with music and laughter',
-      ],
+      details: 'An evening of lively performances and family moments',
     },
     {
       date: '26th Nov 2026',
       title: 'Barat',
-      subtitle: 'The groom procession arrival',
+      hashtag: '#Barat-e-Jayam',
       time: '10:00 AM',
       image: 'assets/photos/barat.png',
-      details: [
-        'Festive procession to the wedding venue',
-        'Traditional welcome by both families',
-      ],
+      details: 'Festive procession to the wedding venue',
     },
     {
       date: '26th Nov 2026',
       title: 'Wedding Ceremony',
-      subtitle: 'Sacred vows and traditions',
+      hashtag: '#JayamJayaSaathVachan',
       time: '1:00 PM',
       image: 'assets/photos/phere.png',
-      details: [
-        'Blessings and rituals at Shree Devleela Garden',
-        'Heartfelt vows shared with loved ones',
-      ],
+      details:
+        'Blessings and rituals at Shree Devleela Garden to share heartfelt vows',
     },
     {
       date: '26th Nov 2026',
       title: 'Grand Reception',
-      subtitle: 'A night of dinner and dance',
+      hashtag: '#JashnWithJayaJayam',
       time: '7:00 PM',
       image: 'assets/photos/grand-reception.png',
-      details: [
-        'Elegant celebration with gourmet dining',
-        'Music, dancing, and joyful festivities',
-      ],
+      details: `Celebration of JJ's forever with gourmet dining`,
     },
   ];
   isPlaying = signal(false);
