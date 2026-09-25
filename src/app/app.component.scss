@@ -84,6 +84,24 @@
   }
 }
 
+.guest-greeting {
+  margin: 0.5rem 0 1rem;
+  font-size: 1.1rem;
+  color: var(--maroon);
+  letter-spacing: 0.04em;
+  text-transform: initial;
+}
+
+.guest-greeting .guest-label {
+  opacity: 0.8;
+  margin-right: 0.35rem;
+}
+
+.guest-greeting strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
 .festivities {
   .festivity-card {
     border-radius: 20px;

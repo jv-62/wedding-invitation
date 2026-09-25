@@ -31,6 +31,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChildren('scratchCanvas') scratchCanvases!: QueryList<
     ElementRef<HTMLCanvasElement>
   >;
+  private readonly guestParamName = 'for';
+  readonly guestFallbackName = 'Guest';
+  private readonly encryptionSecret = 'jayam-jaya-wedding-2026';
   private timer: any;
   private scratchContexts: Array<CanvasRenderingContext2D | null> = [
     null,
@@ -41,6 +44,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private scratchPointerStates = new Map<number, boolean>();
 
   showEnvelope = true;
+  guestName = this.guestFallbackName;
   copy = {
     envelopeSeal: 'J ♥️ J',
     mantra: {
@@ -205,8 +209,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.scratchRevealed.every((revealed) => revealed);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.startCountdown();
+    void this.loadGuestNameFromUrl();
+    console.log(
+      'First invite link',
+      await this.generateInviteUrl('Kenil with Family'),
+    );
     setTimeout(() => {
       this.closeEnvelope();
     }, 3500);
@@ -346,6 +355,144 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   openEnvelope() {
     this.closeEnvelope();
+  }
+
+  private async encryptName(value: string): Promise<string> {
+    const cleanName = value.trim().replace(/\s+/g, ' ').replace(/[<>]/g, '');
+
+    if (!cleanName) {
+      throw new Error('Guest name is required');
+    }
+
+    if (typeof window === 'undefined' || !window.crypto?.subtle) {
+      throw new Error('Web Crypto API is not available in this environment');
+    }
+
+    const key = await this.getEncryptionKey();
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    const encodedName = new TextEncoder().encode(cleanName);
+    const encryptedBuffer = await window.crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      encodedName,
+    );
+
+    const encryptedBytes = new Uint8Array(
+      iv.length + encryptedBuffer.byteLength,
+    );
+    encryptedBytes.set(iv, 0);
+    encryptedBytes.set(new Uint8Array(encryptedBuffer), iv.length);
+
+    return this.base64UrlEncode(encryptedBytes);
+  }
+
+  private async generateInviteUrl(name: string): Promise<string> {
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
+    const encryptedName = await this.encryptName(name);
+    const url = new URL(window.location.href);
+    url.searchParams.set(this.guestParamName, encryptedName);
+    url.hash = '';
+
+    return url.toString();
+  }
+
+  private async loadGuestNameFromUrl(): Promise<void> {
+    const resolvedGuestName = await this.resolveGuestNameFromUrl();
+    if (resolvedGuestName) {
+      this.guestName = resolvedGuestName;
+    }
+  }
+
+  private async resolveGuestNameFromUrl(): Promise<string> {
+    if (typeof window === 'undefined') {
+      return this.guestFallbackName;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const encryptedName = params.get(this.guestParamName);
+
+    if (!encryptedName) {
+      return this.guestFallbackName;
+    }
+
+    try {
+      const decryptedName = await this.decryptName(encryptedName);
+      const normalizedName = decryptedName
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/[<>]/g, '');
+
+      return normalizedName.length ? normalizedName : this.guestFallbackName;
+    } catch {
+      return this.guestFallbackName;
+    }
+  }
+
+  private async decryptName(value: string): Promise<string> {
+    const key = await this.getEncryptionKey();
+    const encryptedBytes = this.base64UrlDecode(value);
+
+    if (encryptedBytes.length < 12 + 16) {
+      throw new Error('Invalid encrypted guest name');
+    }
+
+    const iv = encryptedBytes.slice(0, 12);
+    const cipherText = encryptedBytes.slice(12);
+    const decrypted = await window.crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      cipherText,
+    );
+
+    return new TextDecoder().decode(decrypted);
+  }
+
+  private async getEncryptionKey(): Promise<CryptoKey> {
+    const encoder = new TextEncoder();
+    const keyMaterial = await window.crypto.subtle.digest(
+      'SHA-256',
+      encoder.encode(this.encryptionSecret),
+    );
+
+    return window.crypto.subtle.importKey(
+      'raw',
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt'],
+    );
+  }
+
+  private base64UrlEncode(value: Uint8Array): string {
+    let binary = '';
+
+    value.forEach((byte) => {
+      binary += String.fromCharCode(byte);
+    });
+
+    return btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/g, '');
+  }
+
+  private base64UrlDecode(value: string): Uint8Array {
+    const normalizedValue = value.replace(/-/g, '+').replace(/_/g, '/');
+    const paddedValue = normalizedValue.padEnd(
+      normalizedValue.length + ((4 - (normalizedValue.length % 4)) % 4),
+      '=',
+    );
+    const binaryString = atob(paddedValue);
+    const bytes = new Uint8Array(binaryString.length);
+
+    for (let index = 0; index < binaryString.length; index++) {
+      bytes[index] = binaryString.charCodeAt(index);
+    }
+
+    return bytes;
   }
 
   ngOnDestroy() {

@@ -46,16 +46,26 @@
 
             <mat-divider class="my-3 gold-divider"></mat-divider>
 
+            <div *ngIf="guestName !== guestFallbackName" class="guest-greeting">
+              <span class="guest-label">Dear</span>
+              <strong>{{ guestName }}</strong>
+            </div>
+
             <p class="text-uppercase small tracking">
               {{ copy.invitation.teaser }}
             </p>
+
             <h1 class="vibes display-2 my-4" style="color: var(--maroon)">
               {{ copy.invitation.couple.split(" & ")[0] }}
               <span class="gold-text">&</span>
               {{ copy.invitation.couple.split(" & ")[1] }}
             </h1>
             <p class="playfair fst-italic">
-              {{ copy.invitation.note }}
+              {{
+                guestName !== guestFallbackName
+                  ? "We would be honoured to celebrate with you."
+                  : copy.invitation.note
+              }}
             </p>
           </div>
         </div>
