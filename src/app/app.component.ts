@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     ElementRef<HTMLCanvasElement>
   >;
   private readonly guestParamName = 'for';
+  private readonly createParamName = 'create';
   readonly guestFallbackName = 'Guest';
   private readonly encryptionSecret = 'jayam-jaya-wedding-2026';
   private timer: any;
@@ -210,6 +211,15 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async ngOnInit() {
+    const createGuestName = this.getCreateParamName();
+    if (createGuestName) {
+      const inviteUrl = await this.generateInviteUrl(createGuestName);
+      if (inviteUrl && typeof window !== 'undefined') {
+        window.location.replace(inviteUrl);
+        return;
+      }
+    }
+
     this.startCountdown();
     void this.loadGuestNameFromUrl();
     console.log(
@@ -386,6 +396,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.base64UrlEncode(encryptedBytes);
   }
 
+  private getCreateParamName(): string {
+    if (typeof window === 'undefined') {
+      return '';
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const value = params.get(this.createParamName);
+    return value ? value.trim() : '';
+  }
+
   private async generateInviteUrl(name: string): Promise<string> {
     if (typeof window === 'undefined') {
       return '';
@@ -393,6 +413,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const encryptedName = await this.encryptName(name);
     const url = new URL(window.location.href);
+    url.searchParams.delete(this.createParamName);
     url.searchParams.set(this.guestParamName, encryptedName);
     url.hash = '';
 
